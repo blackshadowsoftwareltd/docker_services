@@ -39,6 +39,30 @@ echo "🔐 Connecting to VPS and setting up services..."
 if ! ssh $VPS_USER@$VPS_IP "
 cd $PROJECT_DIR || exit 1
 
+# Check if Docker is installed and running
+echo '🐳 Checking Docker installation...'
+if ! command -v docker &> /dev/null; then
+    echo '📦 Installing Docker...'
+    apt-get update
+    apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    echo \"deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \$(lsb_release -cs) stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+    apt-get update
+    apt-get install -y docker-ce docker-ce-cli containerd.io
+fi
+
+# Check if Docker Compose is installed
+if ! command -v docker-compose &> /dev/null; then
+    echo '📦 Installing Docker Compose...'
+    curl -L \"https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-\$(uname -s)-\$(uname -m)\" -o /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
+fi
+
+# Start Docker service
+echo '🔄 Starting Docker service...'
+systemctl start docker
+systemctl enable docker
+
 # 3. Create certbot directories
 echo '📁 Creating certbot directories...'
 mkdir -p certbot/conf certbot/www
@@ -51,6 +75,10 @@ docker-compose up -d fuel_cost_server personal_service nginx
 echo '⏳ Waiting for services to start...'
 sleep 30
 
+# Check if services are running
+echo '🔍 Checking service status...'
+docker-compose ps
+
 # 5. Get SSL certificates
 echo '🔒 Obtaining SSL certificates...'
 docker-compose run --rm certbot certonly --webroot -w /var/www/certbot --force-renewal --email blackshadowsoftwareltd@gmail.com -d fuelcost.blackshadow.software -d personal_service.blackshadow.software --agree-tos
@@ -58,6 +86,10 @@ docker-compose run --rm certbot certonly --webroot -w /var/www/certbot --force-r
 # 6. Restart nginx with SSL
 echo '🔄 Restarting nginx with SSL...'
 docker-compose restart nginx
+
+# Final status check
+echo '🔍 Final service status:'
+docker-compose ps
 
 echo '✅ Deployment completed successfully!'
 echo '🌐 Your services should be available at:'
