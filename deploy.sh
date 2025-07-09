@@ -4,10 +4,12 @@
 # Replace VPS_IP and VPS_USER with your actual values
 
 VPS_IP="159.198.32.51"
-VPS_USER="user"
-PROJECT_DIR="/home/user/docker_services"
+VPS_USER="root"
+PROJECT_NAME=$(basename "$(pwd)")
+PROJECT_DIR="/home/$VPS_USER/$PROJECT_NAME"
 
 echo "🚀 Starting VPS deployment..."
+echo "📁 Target directory: $PROJECT_DIR"
 
 # 1. Upload project to VPS
 echo "📦 Uploading project to VPS..."
@@ -15,8 +17,8 @@ scp -r ./ $VPS_USER@$VPS_IP:$PROJECT_DIR
 
 # 2. SSH into VPS and run deployment commands
 echo "🔐 Connecting to VPS and setting up services..."
-ssh $VPS_USER@$VPS_IP << 'EOF'
-cd /home/user/docker_services
+ssh $VPS_USER@$VPS_IP << EOF
+cd $PROJECT_DIR
 
 # 3. Create certbot directories
 echo "📁 Creating certbot directories..."
