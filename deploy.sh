@@ -13,7 +13,8 @@ echo "📁 Target directory: $PROJECT_DIR"
 
 # 1. Upload project to VPS
 echo "📦 Uploading project to VPS..."
-scp -r ./ $VPS_USER@$VPS_IP:$PROJECT_DIR
+ssh $VPS_USER@$VPS_IP "mkdir -p $PROJECT_DIR"
+rsync -av --exclude='deploy.sh' ./ $VPS_USER@$VPS_IP:$PROJECT_DIR/
 
 # 2. SSH into VPS and run deployment commands
 echo "🔐 Connecting to VPS and setting up services..."
