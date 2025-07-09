@@ -1,8 +1,8 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  fuelcost:
-    build: ./fuelcost
+  fuel_cost_server:
+    build: ./fuel_cost_server
     expose:
       - "8080"
     restart: unless-stopped
@@ -27,7 +27,7 @@ services:
       - "80:80"
       - "443:443"
     depends_on:
-      - fuelcost
+      - fuel_cost_server
       - personal_service
     restart: unless-stopped
     volumes:
@@ -40,7 +40,7 @@ services:
     image: certbot/certbot
     volumes:
       - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot 
+      - ./certbot/www:/var/www/certbot
     command: certonly --webroot -w /var/www/certbot --force-renewal --email blackshadowsoftwareltd@gmail.com -d fuelcost.blackshadow.software -d personal_service.blackshadow.software --agree-tos
 
 networks:
