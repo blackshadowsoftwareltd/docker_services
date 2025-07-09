@@ -25,23 +25,12 @@ services:
     build: ./nginx
     ports:
       - "80:80"
-      - "443:443"
     depends_on:
       - fuel_cost_server
       - personal_service
     restart: unless-stopped
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
     networks:
       - app-network
-
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --force-renewal --email blackshadowsoftwareltd@gmail.com -d fuelcost.blackshadow.software -d personal_service.blackshadow.software --agree-tos
 
 networks:
   app-network:
