@@ -11,10 +11,23 @@ PROJECT_DIR="/home/$VPS_USER/$PROJECT_NAME"
 echo "🚀 Starting VPS deployment..."
 echo "📁 Target directory: $PROJECT_DIR"
 
+# Check if sshpass is available
+if command -v sshpass &> /dev/null; then
+    echo "Please enter your VPS password:"
+    read -s VPS_PASSWORD
+    SSH_CMD="sshpass -p '$VPS_PASSWORD' ssh"
+    SCP_CMD="sshpass -p '$VPS_PASSWORD' scp"
+    RSYNC_CMD="sshpass -p '$VPS_PASSWORD' rsync"
+else
+    echo "🔐 sshpass not found. You'll be prompted for password multiple times..."
+    SSH_CMD="ssh"
+    SCP_CMD="scp"
+    RSYNC_CMD="rsync"
+fi
+
 # Test SSH connection first
 echo "🔐 Testing SSH connection..."
-echo "You will be prompted for your VPS password multiple times..."
-if ! ssh -o ConnectTimeout=10 $VPS_USER@$VPS_IP exit; then
+if ! $SSH_CMD -o ConnectTimeout=10 $VPS_USER@$VPS_IP exit; then
     echo "❌ SSH connection failed. Please ensure:"
     echo "   1. VPS is running and accessible"
     echo "   2. You have the correct password"
@@ -24,19 +37,19 @@ fi
 
 # 1. Upload project to VPS
 echo "📦 Uploading project to VPS..."
-if ! ssh $VPS_USER@$VPS_IP "mkdir -p $PROJECT_DIR"; then
+if ! $SSH_CMD $VPS_USER@$VPS_IP "mkdir -p $PROJECT_DIR"; then
     echo "❌ Failed to create directory on VPS"
     exit 1
 fi
 
-if ! rsync -av --exclude='deploy.sh' ./ $VPS_USER@$VPS_IP:$PROJECT_DIR/; then
+if ! $RSYNC_CMD -av --exclude='deploy.sh' ./ $VPS_USER@$VPS_IP:$PROJECT_DIR/; then
     echo "❌ Failed to upload files to VPS"
     exit 1
 fi
 
 # 2. SSH into VPS and run deployment commands
 echo "🔐 Connecting to VPS and setting up services..."
-if ! ssh $VPS_USER@$VPS_IP "
+if ! $SSH_CMD $VPS_USER@$VPS_IP "
 cd $PROJECT_DIR || exit 1
 
 # Check if Docker is installed and running
