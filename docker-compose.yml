@@ -27,7 +27,7 @@ services:
       - "80:80"
     depends_on:
       - fuel_cost_server
-      - personal_service
+      # - personal_service
     restart: unless-stopped
     networks:
       - app-network
