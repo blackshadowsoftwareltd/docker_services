@@ -11,15 +11,15 @@ services:
     networks:
       - app-network
 
-  personal_service:
-    build: ./personal_service
-    expose:
-      - "8081"
-    restart: unless-stopped
-    environment:
-      - RUST_LOG=info
-    networks:
-      - app-network
+  # personal_service:
+  #   build: ./personal_service
+  #   expose:
+  #     - "8081"
+  #   restart: unless-stopped
+  #   environment:
+  #     - RUST_LOG=info
+  #   networks:
+  #     - app-network
 
   nginx:
     build: ./nginx
