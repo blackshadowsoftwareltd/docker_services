@@ -4,7 +4,7 @@ services:
   fuel_cost_server:
     build: ./fuel_cost_server
     expose:
-      - "8080"
+      - "8880"
     restart: unless-stopped
     environment:
       - RUST_LOG=info
