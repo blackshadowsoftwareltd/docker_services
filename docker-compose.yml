@@ -4,11 +4,11 @@ services:
   fuel_cost_server:
     build: ./fuel_cost_server
     expose:
-      - "8880" # Match your Rust server port
-    restart: unless-stopped
+      - "8880"
+    restart: "no" # Don't restart so we can see the error
     environment:
-      - RUST_LOG=info
-      - RUST_BACKTRACE=1 # Add backtrace for debugging
+      - RUST_LOG=debug
+      - RUST_BACKTRACE=full
     networks:
       - app-network
 
@@ -27,7 +27,7 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - fuel_cost_server # Simplified dependency
+      - fuel_cost_server
     restart: unless-stopped
     networks:
       - app-network
