@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=builder /app/target/release/fuel_cost_server /usr/local/bin/fuel_cost_server
 
-EXPOSE 8080
+EXPOSE 8880
 
 CMD ["fuel_cost_server"]
 
