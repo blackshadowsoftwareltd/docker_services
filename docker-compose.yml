@@ -5,13 +5,15 @@ services:
     build: ./fuel_cost_server
     expose:
       - "8880"
-    restart: "no" # Don't restart so we can see the error
+    restart: unless-stopped
     environment:
-      - RUST_LOG=debug
-      - RUST_BACKTRACE=full
+      - RUST_LOG=info
+      - RUST_BACKTRACE=1
+      - DATABASE_URL=sqlite:/app/data/fuel_cost.db
     networks:
       - app-network
-
+    volumes:
+      - fuel_data:/app/data # Persistent volume for database
   # personal_service:
   #   build: ./personal_service
   #   expose:
@@ -35,3 +37,6 @@ services:
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  fuel_data: # Named volume for database persistence
