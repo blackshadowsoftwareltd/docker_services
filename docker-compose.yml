@@ -1,0 +1,61 @@
+version: "3.8"
+
+services:
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: nginx_proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./fuelcost_dashboard:/var/www/fuelcost_dashboard
+      - ./portfolio:/var/www/portfolio
+    depends_on:
+      - fuel_server
+      - personal_server
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # ? Fuel Server (Rust backend)
+  # fuel_server:
+  #   build:
+  #     context: ./fuel_server
+  #     dockerfile: Dockerfile
+  #   container_name: fuel_server
+  #   expose:
+  #     - "8880"
+  #   environment:
+  #     - RUST_LOG=info
+  #     - PORT=8880
+  #   networks:
+  #     - app-network
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./fuel_server/src:/app/src
+  #     - ./fuel_server/Cargo.toml:/app/Cargo.toml
+
+  # ? Personal Server (Rust backend)
+  # personal_server:
+  #   build:
+  #     context: ./personal_server
+  #     dockerfile: Dockerfile
+  #   container_name: personal_server
+  #   expose:
+  #     - "8885"
+  #   environment:
+  #     - RUST_LOG=info
+  #     - PORT=8885
+  #   networks:
+  #     - app-network
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./personal_server/src:/app/src
+  #     - ./personal_server/Cargo.toml:/app/Cargo.toml
+
+networks:
+  app-network:
+    driver: bridge
