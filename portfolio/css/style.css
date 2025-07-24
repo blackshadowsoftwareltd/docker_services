@@ -1,0 +1,61 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 50%, #e74c3c 100%);
+    min-height: 100vh;
+    color: white;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 3.5rem;
+    margin-bottom: 30px;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+}
+
+#portfolio {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    padding: 50px;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+}
+
+.skills-list {
+    list-style: none;
+    padding: 0;
+}
+
+.skills-list li {
+    margin: 15px 0;
+    padding: 15px 20px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    border-left: 4px solid #3498db;
+    transition: all 0.3s ease;
+}
+
+.skills-list li:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateX(10px);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 12px 24px;
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    color: white;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    box-shadow: 0 5px 15px rgba(46,204,113,0.4);
+}
